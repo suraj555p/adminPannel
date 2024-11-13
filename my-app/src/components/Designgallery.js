@@ -67,6 +67,7 @@ const DesignsGallery = () => {
 
   if (loading) return <div className="text-center py-6">Loading designs...</div>;
   if (error) return <div className="text-red-500 text-center py-6">{error}</div>;
+  if (designs.length === 0) return <div className="text-center py-6">No posts are available.</div>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -74,7 +75,7 @@ const DesignsGallery = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {designs.map((design) => (
           <div key={design._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            {/* Design Image 1 (used in place of coverImage) */}
+            {/* Design Image */}
             {design.designImage1 ? (
               <img
                 src={design.designImage1}
