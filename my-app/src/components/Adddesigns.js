@@ -28,45 +28,28 @@ const AddDesign = () => {
 
   const validateForm = () => {
     let errors = {};
-    
+  
     // Validate required fields
     if (!formData.designName) errors.designName = 'Design name is required.';
     if (!formData.description) errors.description = 'Description is required.';
-    
+  
     // Validate price and booking charge
     if (!formData.price) {
       errors.price = 'Price is required.';
     } else if (isNaN(formData.price) || Number(formData.price) <= 0) {
       errors.price = 'Price must be a positive number.';
     }
-
+  
     if (!formData.bookingCharge) {
       errors.bookingCharge = 'Booking charge is required.';
     } else if (isNaN(formData.bookingCharge) || Number(formData.bookingCharge) <= 0) {
       errors.bookingCharge = 'Booking charge must be a positive number.';
     }
-
-    // Validate image uploads
-    if (!formData.coverImage) errors.coverImage = 'Cover image is required.';
-    if (!formData.designImage1) errors.designImage1 = 'Design image 1 is required.';
-    
-    // Check file types
-    const validImageTypes = ['image/jpeg', 'image/png'];
-    
-    if (formData.coverImage && !validImageTypes.includes(formData.coverImage.type)) {
-      errors.coverImage = 'Cover image must be a JPG or PNG file.';
-    }
-    
-    for (let i = 1; i <= 3; i++) {
-      const imageFile = formData[`designImage${i}`];
-      if (imageFile && !validImageTypes.includes(imageFile.type)) {
-        errors[`designImage${i}`] = `Design image ${i} must be a JPG or PNG file.`;
-      }
-    }
-
+  
     setError(errors);
     return Object.keys(errors).length === 0; // Return true if no errors
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
