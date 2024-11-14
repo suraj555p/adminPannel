@@ -25,6 +25,7 @@ const Navbar = () => {
             <Link to="/booking-notifications" className="py-5 px-3 text-gray-700 hover:text-gray-900">Booking notifications</Link>
             <Link to="/add-designs" className="py-5 px-3 text-gray-700 hover:text-gray-900">Add designs</Link>
             <Link to="/design-gallery" className="py-5 px-3 text-gray-700 hover:text-gray-900">Designs status</Link>
+            <Link to="/logout" className="py-5 px-3 text-gray-700 hover:text-gray-900">Logout</Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -50,6 +51,7 @@ const Navbar = () => {
           <Link to="/booking-notifications" className="block py-2 px-4 text-sm hover:bg-gray-200">Booking notifications</Link>
           <Link to="/add-designs" className="block py-2 px-4 text-sm hover:bg-gray-200">Add designs</Link>
           <Link to="/design-gallery" className="block py-2 px-4 text-sm hover:bg-gray-200">Designs status</Link>
+          <Link to="/logout" className="block py-2 px-4 text-sm hover:bg-gray-200">Logout</Link>
         </div>
       )}
     </nav>

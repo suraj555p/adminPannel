@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 
 const DesignsGallery = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+
+    if(!token) {
+      navigate("/");
+    }
+  },[])
   const [designs, setDesigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -39,7 +50,7 @@ const DesignsGallery = () => {
   // Function to handle update action
   const handleUpdate = async () => {
     try {
-      await axios.put(`https://mehendi-app.onrender.com/api/designs/${currentDesign._id}`, currentDesign);
+      await axios.put(`http://localhost:5000/api/designs/${currentDesign._id}`, currentDesign);
       setDesigns((prevDesigns) =>
         prevDesigns.map((design) =>
           design._id === currentDesign._id ? currentDesign : design
@@ -70,7 +81,9 @@ const DesignsGallery = () => {
   if (designs.length === 0) return <div className="text-center py-6">No posts are available.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <>
+      <Navbar/>
+      <div className="min-h-screen bg-gray-100 p-4">
       <h2 className="text-3xl font-bold text-center mb-6">Designs Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {designs.map((design) => (
@@ -193,6 +206,7 @@ const DesignsGallery = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

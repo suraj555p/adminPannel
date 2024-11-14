@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 const AddDesign = () => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+
+    if(!token) {
+      navigate("/");
+    }
+  },[]) 
   const [formData, setFormData] = useState({
     designName: '',
     description: '',
@@ -108,125 +119,128 @@ const AddDesign = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-11/12 md:w-3/5 lg:w-2/5 p-6 bg-white rounded-lg shadow-md mt-10">
-        <h2 className="text-2xl font-bold mb-4">Add New Design</h2>
-        
-        {message && <div className="text-green-500">{message}</div>}
-        {Object.keys(error).map((key) => (
-          <div key={key} className="text-red-500">{error[key]}</div>
-        ))}
-
-        <form onSubmit={handleSubmit}>
-          {/* Design Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1" htmlFor="designName">Design Name:</label>
-            <input
-              type="text"
-              id="designName"
-              name="designName"
-              value={formData.designName}
-              onChange={handleChange}
-              className={`w-full p-2 border ${error.designName ? 'border-red-500' : 'border-gray-300'} rounded`}
-              required
-            />
-          </div>
-
-          {/* Description */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1" htmlFor="description">Description:</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className={`w-full p-2 border ${error.description ? 'border-red-500' : 'border-gray-300'} rounded`}
-              required
-            ></textarea>
-          </div>
-
-          {/* Price */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1" htmlFor="price">Price:</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              className={`w-full p-2 border ${error.price ? 'border-red-500' : 'border-gray-300'} rounded`}
-              required
-            />
-          </div>
-
-          {/* Booking Charge */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1" htmlFor="bookingCharge">Booking Charge:</label>
-            <input
-              type="number"
-              id="bookingCharge"
-              name="bookingCharge"
-              value={formData.bookingCharge}
-              onChange={handleChange}
-              className={`w-full p-2 border ${error.bookingCharge ? 'border-red-500' : 'border-gray-300'} rounded`}
-              required
-            />
-          </div>
-
-          {/* Cover Image Upload */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1" htmlFor="coverImage">Cover Image:</label>
-            <input
-              type="file"
-              id="coverImage"
-              name="coverImage"
-              accept=".jpg,.jpeg,.png" // Optional restrict file types
-              onChange={handleChange}
-              className={`w-full p-2 border ${error.coverImage ? 'border-red-500' : 'border-gray-300'} rounded`}
-            />
-            {error.coverImage && <p className="text-red-500 text-sm">{error.coverImage}</p>}
-          </div>
-
-          {/* Design Image Uploads */}
-          {[1, 2, 3].map((num) => (
-            <div key={num} className="mb-4">
-              <label className={`block text-sm font-medium mb-1`} htmlFor={`designImage${num}`}>Design Image {num}:</label>
-              <input
-                type="file"
-                id={`designImage${num}`}
-                name={`designImage${num}`}
-                accept=".jpg,.jpeg,.png" // Optional restrict file types
-                onChange={handleChange}
-                className={`w-full p-2 border ${error[`designImage${num}`] ? 'border-red-500' : 'border-gray-300'} rounded`}
-              />
-              {error[`designImage${num}`] && <p className="text-red-500 text-sm">{error[`designImage${num}`]}</p>}
-            </div>
+    <>
+      <Navbar/>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="w-11/12 md:w-3/5 lg:w-2/5 p-6 bg-white rounded-lg shadow-md mt-10">
+          <h2 className="text-2xl font-bold mb-4">Add New Design</h2>
+          
+          {message && <div className="text-green-500">{message}</div>}
+          {Object.keys(error).map((key) => (
+            <div key={key} className="text-red-500">{error[key]}</div>
           ))}
 
-          {/* Submit Button */}
-          <button 
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 mx-auto block text-center"
-          >
-            Add Design
-          </button>
-        </form>
+          <form onSubmit={handleSubmit}>
+            {/* Design Name */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1" htmlFor="designName">Design Name:</label>
+              <input
+                type="text"
+                id="designName"
+                name="designName"
+                value={formData.designName}
+                onChange={handleChange}
+                className={`w-full p-2 border ${error.designName ? 'border-red-500' : 'border-gray-300'} rounded`}
+                required
+              />
+            </div>
 
-        {/* Display the newly created design details */}
-        {newDesign && (
-          <div className="mt-6 p-4 bg-gray-100 rounded">
-            <h3 className="text-lg font-bold">New Design Created:</h3>
-            <p><strong>Name:</strong> {newDesign.designName}</p>
-            <p><strong>Description:</strong> {newDesign.description}</p>
-            <p><strong>Price:</strong> ${newDesign.price}</p>
-            <p><strong>Booking Charge:</strong> ${newDesign.bookingCharge}</p>
-            {newDesign.coverImage && (
-              <img src={newDesign.coverImage} alt={newDesign.designName} className="mt-2 w-full h-auto object-cover" />
-            )}
-          </div>
-        )}
+            {/* Description */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1" htmlFor="description">Description:</label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className={`w-full p-2 border ${error.description ? 'border-red-500' : 'border-gray-300'} rounded`}
+                required
+              ></textarea>
+            </div>
+
+            {/* Price */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1" htmlFor="price">Price:</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                className={`w-full p-2 border ${error.price ? 'border-red-500' : 'border-gray-300'} rounded`}
+                required
+              />
+            </div>
+
+            {/* Booking Charge */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1" htmlFor="bookingCharge">Booking Charge:</label>
+              <input
+                type="number"
+                id="bookingCharge"
+                name="bookingCharge"
+                value={formData.bookingCharge}
+                onChange={handleChange}
+                className={`w-full p-2 border ${error.bookingCharge ? 'border-red-500' : 'border-gray-300'} rounded`}
+                required
+              />
+            </div>
+
+            {/* Cover Image Upload */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1" htmlFor="coverImage">Cover Image:</label>
+              <input
+                type="file"
+                id="coverImage"
+                name="coverImage"
+                accept=".jpg,.jpeg,.png" // Optional restrict file types
+                onChange={handleChange}
+                className={`w-full p-2 border ${error.coverImage ? 'border-red-500' : 'border-gray-300'} rounded`}
+              />
+              {error.coverImage && <p className="text-red-500 text-sm">{error.coverImage}</p>}
+            </div>
+
+            {/* Design Image Uploads */}
+            {[1, 2, 3].map((num) => (
+              <div key={num} className="mb-4">
+                <label className={`block text-sm font-medium mb-1`} htmlFor={`designImage${num}`}>Design Image {num}:</label>
+                <input
+                  type="file"
+                  id={`designImage${num}`}
+                  name={`designImage${num}`}
+                  accept=".jpg,.jpeg,.png" // Optional restrict file types
+                  onChange={handleChange}
+                  className={`w-full p-2 border ${error[`designImage${num}`] ? 'border-red-500' : 'border-gray-300'} rounded`}
+                />
+                {error[`designImage${num}`] && <p className="text-red-500 text-sm">{error[`designImage${num}`]}</p>}
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <button 
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 mx-auto block text-center"
+            >
+              Add Design
+            </button>
+          </form>
+
+          {/* Display the newly created design details */}
+          {newDesign && (
+            <div className="mt-6 p-4 bg-gray-100 rounded">
+              <h3 className="text-lg font-bold">New Design Created:</h3>
+              <p><strong>Name:</strong> {newDesign.designName}</p>
+              <p><strong>Description:</strong> {newDesign.description}</p>
+              <p><strong>Price:</strong> ${newDesign.price}</p>
+              <p><strong>Booking Charge:</strong> ${newDesign.bookingCharge}</p>
+              {newDesign.coverImage && (
+                <img src={newDesign.coverImage} alt={newDesign.designName} className="mt-2 w-full h-auto object-cover" />
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,43 +1,87 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-const Login = ({ setToken }) => {
-    const [email, setEmail] = useState(''); // Change username to email
+const Login = () => {
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate(); // Initialize navigate
 
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    
+    //     try {
+    //         console.log("reached");
+            
+    //         const response = await fetch('http://localhost:6000/api/auth/login', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ email, password }),
+    //         });
+
+    //         console.log(response);
+            
+            
+
+    //         if (response.ok) {
+    //             const { token } = await response.json();
+    //             setToken(token); // Store the token using the provided function
+    //             setError(''); // Clear any previous errors
+                
+    //             // Navigate to Booking Notifications after successful login
+    //             navigate('/booking-notifications'); // Change this path to your desired route
+    //         } else {
+    //             if (response.status === 401) {
+    //                 setError('Invalid email or password.');
+    //             } else if (response.status === 400) {
+    //                 setError('Bad request. Please check your input.');
+    //             } else {
+    //                 const errorMessage = await response.text();
+    //                 setError(errorMessage || 'Login failed. Please try again.');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.error('Login error:', error);
+    //         setError('An unexpected error occurred. Please try again later.');
+    //     }
+    // };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        
         try {
-            const response = await fetch('https://authentication-server-tac1.onrender.com/api/auth/login', {
+            let response = await fetch('https://mehendi-app.onrender.com/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email, password }), // Use email instead of username
+                body: JSON.stringify({ email, password }),
             });
-            if (response.ok) {
-                const { token } = await response.json();
-                setToken(token); // Store the token using the provided function
+            
+            response = await response.json();
+
+            console.log(response);
+            
+    
+            if (response.success) {
+                const { token } = response; // Now this will work correctly
                 setError(''); // Clear any previous errors
+                localStorage.setItem("token", token);
+                // Navigate to Booking Notifications after successful login
+                navigate('/booking-notifications'); // Change this path to your desired route
             } else {
-                // Handle different response statuses
-                if (response.status === 401) {
-                    setError('Invalid email or password.'); // Unauthorized error
-                } else if (response.status === 400) {
-                    setError('Bad request. Please check your input.'); // Bad request error
-                } else {
-                    const errorMessage = await response.text();
-                    setError(errorMessage || 'Login failed. Please try again.');
-                }
+                const errorMessage = await response.json(); // Get error message from JSON response
+                setError(errorMessage.message || 'Login failed. Please try again.');
             }
         } catch (error) {
             console.error('Login error:', error);
             setError('An unexpected error occurred. Please try again later.');
         }
     };
-    
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-96">
@@ -45,13 +89,13 @@ const Login = ({ setToken }) => {
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700" htmlFor="email">
-                            Email {/* Change label to Email */}
+                            Email
                         </label>
                         <input
-                            type="email" // Change input type to email
-                            id="email" // Change id to email
-                            value={email} // Use email state variable
-                            onChange={(e) => setEmail(e.target.value)} // Update state on change
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500"
                         />
