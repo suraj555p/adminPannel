@@ -4,18 +4,19 @@ import { useNavigate } from 'react-router-dom';
 
 const BookingNotifications = () => {
   const navigate = useNavigate();
-
+  
+  // Check for token and redirect if not found
   useEffect(() => {
-    const token = localStorage.getItem("token")
-
-    if(!token) {
-      navigate("/");
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
     }
-  },[])
+  }, [navigate]);
+
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [searchTerm, setSearchTerm] = useState(''); // New state for search term
+  const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [newStatus, setNewStatus] = useState('');
@@ -30,7 +31,7 @@ const BookingNotifications = () => {
           throw new Error('Failed to fetch bookings');
         }
         const data = await response.json();
-        setBookings(data.bookings); // Assuming the response structure contains bookings
+        setBookings(data.bookings);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -47,7 +48,7 @@ const BookingNotifications = () => {
     if (bookingToChange) {
       setSelectedBookingId(id);
       setNewStatus(status);
-      setPreviousStatus(bookingToChange.status); // Store the previous status
+      setPreviousStatus(bookingToChange.status);
       setShowModal(true);
     }
   };
@@ -67,12 +68,11 @@ const BookingNotifications = () => {
         throw new Error('Failed to update status');
       }
 
-      // Reload the page to fetch updated data
       window.location.reload();
     } catch (err) {
       alert(err.message);
     } finally {
-      setShowModal(false); // Close modal after operation
+      setShowModal(false);
     }
   };
 
@@ -90,7 +90,6 @@ const BookingNotifications = () => {
         throw new Error('Failed to delete booking');
       }
 
-      // Remove deleted booking from local state
       setBookings((prevBookings) => prevBookings.filter((booking) => booking._id !== id));
     } catch (err) {
       alert(err.message);
@@ -99,7 +98,7 @@ const BookingNotifications = () => {
 
   // Filter bookings based on search term
   const filteredBookings = bookings.filter(booking =>
-    booking.clientName.toLowerCase().includes(searchTerm.toLowerCase())
+    booking.clientName && booking.clientName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Render loading state or error message
